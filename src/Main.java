@@ -25,6 +25,8 @@ public class Main {
 
     }
 
+    int prueba = 122344;
+
 
     public static String mostrarError(int valor) {
         if (valor == 24847) {
