@@ -10,6 +10,8 @@ public class Main {
         int valorVe = capturarVecindario(args);
 
 
+        int variable = 123;
+
         // Mostrar resultados, manejando errores si es necesario
         System.out.println("w= " + mostrarError(valorWidth));
         System.out.println("h= " + mostrarError(valorH));
