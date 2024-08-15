@@ -9,9 +9,6 @@ public class Main {
         String[] patron = capturarPatron(args);
         int valorVe = capturarVecindario(args);
 
-
-        int variable = 123;
-
         // Mostrar resultados, manejando errores si es necesario
         System.out.println("w= " + mostrarError(valorWidth));
         System.out.println("h= " + mostrarError(valorH));
@@ -27,6 +24,7 @@ public class Main {
         }
 
     }
+
 
     public static String mostrarError(int valor) {
         if (valor == 24847) {
