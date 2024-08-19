@@ -9,6 +9,8 @@ public class Main {
         String[] patron = capturarPatron(args);
         int valorVe = capturarVecindario(args);
 
+
+
         // Mostrar resultados, manejando errores si es necesario
         System.out.println("w= " + mostrarError(valorWidth));
         System.out.println("h= " + mostrarError(valorH));
@@ -16,16 +18,36 @@ public class Main {
         System.out.println("s= " +  mostrarError(valorV));
         System.out.println("p= "+ Arrays.toString(patron));
         System.out.println("n="+ mostrarError(valorVe));
-        if (valorWidth != 24847 && valorWidth != 34857 &&
-                valorH != 24847 && valorH != 34857 &&
-                valorG != 24847 && valorG != 34857 &&
-                valorV != 24847 && valorV != 34857) {
-            mostrarPatron(patron, valorWidth, valorH);
+
+
+        int contadorGeneracion = 0;
+
+        while(contadorGeneracion <= valorG){
+            if (valorWidth != 24847 && valorWidth != 34857 &&
+                    valorH != 24847 && valorH != 34857 &&
+                    valorG != 24847 && valorG != 34857 &&
+                    valorV != 24847 && valorV != 34857) {
+                System.out.println(" ");
+                System.out.println("Esta es la generacion: "+ contadorGeneracion);
+                System.out.println(" ");
+                mostrarPatron(patron, valorWidth, valorH);
+            }
+
+            try {
+                Thread.sleep(valorV);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            contadorGeneracion++;
         }
+
+
+
 
     }
 
-    int prueba = 122344;
+
 
 
     public static String mostrarError(int valor) {
@@ -44,6 +66,9 @@ public class Main {
     public static int capturarAncho(String[] args) {
         try {
             String width = args[0];
+            if(!width.startsWith("w=")){
+                return 24847;
+            }
             String valueW = width.replaceAll("[w=]", "");
             if (!valueW.equals("10") && !valueW.equals("20") && !valueW.equals("40") && !valueW.equals("80")) {
                 throw new NumberFormatException("Valor de ancho no válido: " + valueW);
@@ -59,6 +84,9 @@ public class Main {
     public static int capturarAlto(String[] args) {
         try {
             String height = args[1];
+            if(!height.startsWith("w=")){
+                return 24847;
+            }
             String valueH = height.replaceAll("[h=]", "");
             if (!valueH.equals("10") && !valueH.equals("20") && !valueH.equals("40")) {
                 throw new NumberFormatException("Valor de ancho no válido: " + valueH);
@@ -75,6 +103,9 @@ public class Main {
     public static int capturarGeneracion(String[] args) {
         try {
             String generation = args[2];
+            if(!generation.startsWith("w=")){
+                return 24847;
+            }
             String valueG = generation.replaceAll("[g=]", "");
             return Integer.parseInt(valueG);
         } catch (NumberFormatException error) {
@@ -87,6 +118,9 @@ public class Main {
     public static int capturarVelocidad(String[] args) {
         try {
             String velocidad = args[3];
+            if(!velocidad.startsWith("w=")){
+                return 24847;
+            }
             String valueV = velocidad.replaceAll("[s=]", "");
             return Integer.parseInt(valueV);
         } catch (NumberFormatException error) {
@@ -99,6 +133,9 @@ public class Main {
     public static int capturarVecindario(String[] args) {
         try {
             String vecindario = args[5];
+            if(!vecindario.startsWith("w=")){
+                return 24847;
+            }
             String valueVe = vecindario.replaceAll("[n=]", "");
             return Integer.parseInt(valueVe);
         }catch (NumberFormatException error) {
@@ -110,13 +147,18 @@ public class Main {
 
     public static String[] capturarPatron(String[] args) {
         try {
-            String wFormatString = args[4];
-            String wFormatStringLimpiado = limpiarDatos(wFormatString);
+            String patronString = args[4];
+            if(!patronString.startsWith("p=")){
+                return new String[]{"FORMATO INVALIDO"};
+            }
+            String wFormatStringLimpiado = limpiarDatos(patronString);
+
             return wFormatStringLimpiado.split("#");
         } catch (ArrayIndexOutOfBoundsException error) {
             return new String[]{"Error"}; // O retorna un array vacío o con un mensaje de error
         }
     }
+
 
     public static void mostrarPatron(String[] patrones, int fila, int columna) {
         int[][] tablero = new int[fila][columna];
