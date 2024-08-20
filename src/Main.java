@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,40 +11,22 @@ public class Main {
         int valorVe = capturarVecindario(args);
 
 
-
         // Mostrar resultados, manejando errores si es necesario
         System.out.println("w= " + mostrarError(valorWidth));
         System.out.println("h= " + mostrarError(valorH));
-        System.out.println("g=500 " + mostrarError(valorG) );
+        System.out.println("g= " + mostrarError(valorG) );
         System.out.println("s= " +  mostrarError(valorV));
         System.out.println("p= "+ Arrays.toString(patron));
         System.out.println("n="+ mostrarError(valorVe));
 
 
-        int contadorGeneracion = 0;
-
-        while(contadorGeneracion <= valorG){
-            if (valorWidth != 24847 && valorWidth != 34857 &&
-                    valorH != 24847 && valorH != 34857 &&
-                    valorG != 24847 && valorG != 34857 &&
-                    valorV != 24847 && valorV != 34857) {
-                System.out.println(" ");
-                System.out.println("Esta es la generacion: "+ contadorGeneracion);
-                System.out.println(" ");
-                mostrarPatron(patron, valorWidth, valorH);
-            }
-
-            try {
-                Thread.sleep(valorV);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-
-            contadorGeneracion++;
+        if (valorWidth != 24847 && valorWidth != 34857 &&
+                valorH != 24847 && valorH != 34857 &&
+                valorG != 24847 && valorG != 34857 &&
+                valorV != 24847 && valorV != 34857) {
+            int [][] tableroListo = generarPatron(patron, valorWidth, valorH);
+            mostrarPatron(tableroListo);
         }
-
-
-
 
     }
 
@@ -84,9 +67,10 @@ public class Main {
     public static int capturarAlto(String[] args) {
         try {
             String height = args[1];
-            if(!height.startsWith("w=")){
+            if(!height.startsWith("h=")){
                 return 24847;
             }
+
             String valueH = height.replaceAll("[h=]", "");
             if (!valueH.equals("10") && !valueH.equals("20") && !valueH.equals("40")) {
                 throw new NumberFormatException("Valor de ancho no válido: " + valueH);
@@ -102,15 +86,22 @@ public class Main {
 
     public static int capturarGeneracion(String[] args) {
         try {
+
             String generation = args[2];
-            if(!generation.startsWith("w=")){
+            if(!generation.startsWith("g=")){
                 return 24847;
             }
+
+
             String valueG = generation.replaceAll("[g=]", "");
             return Integer.parseInt(valueG);
-        } catch (NumberFormatException error) {
+
+        }
+        catch (NumberFormatException error) {
             return 24847; // O usar otro código de error si es necesario
-        } catch (ArrayIndexOutOfBoundsException error) {
+
+        }
+        catch (ArrayIndexOutOfBoundsException error) {
             return 34857; // O usar otro código de error si es necesario
         }
     }
@@ -118,9 +109,11 @@ public class Main {
     public static int capturarVelocidad(String[] args) {
         try {
             String velocidad = args[3];
-            if(!velocidad.startsWith("w=")){
+
+            if(!velocidad.startsWith("s=")){
                 return 24847;
             }
+
             String valueV = velocidad.replaceAll("[s=]", "");
             return Integer.parseInt(valueV);
         } catch (NumberFormatException error) {
@@ -133,9 +126,10 @@ public class Main {
     public static int capturarVecindario(String[] args) {
         try {
             String vecindario = args[5];
-            if(!vecindario.startsWith("w=")){
+            if(!vecindario.startsWith("n=")){
                 return 24847;
             }
+
             String valueVe = vecindario.replaceAll("[n=]", "");
             return Integer.parseInt(valueVe);
         }catch (NumberFormatException error) {
@@ -145,22 +139,35 @@ public class Main {
         }
     }
 
+
+
     public static String[] capturarPatron(String[] args) {
         try {
             String patronString = args[4];
-            if(!patronString.startsWith("p=")){
-                return new String[]{"FORMATO INVALIDO"};
+            if (!patronString.startsWith("p=")){
+                return new String[]{"Formato Invalido"};
             }
-            String wFormatStringLimpiado = limpiarDatos(patronString);
 
-            return wFormatStringLimpiado.split("#");
+            String patronStringlimpiado = limpiarDatos(patronString);
+            if (patronStringlimpiado.equals("rnd")){
+                String[] patronrnd = new String[]{patronStringlimpiado};
+                return patronrnd;
+            }
+
+            return patronStringlimpiado.split("#");
         } catch (ArrayIndexOutOfBoundsException error) {
             return new String[]{"Error"}; // O retorna un array vacío o con un mensaje de error
         }
     }
 
 
-    public static void mostrarPatron(String[] patrones, int fila, int columna) {
+    public static int[][] generarPatron(String[] patrones, int fila, int columna) {
+        if (patrones.length == 1 && patrones[0].equals("rnd")) {
+            // Si el patrón es "rnd", generar y mostrar un patrón aleatorio
+            return PatronRandom(fila, columna);
+
+        }
+
         int[][] tablero = new int[fila][columna];
         int contadorFilas = 0;
         int contadorColumnas = 0;
@@ -173,10 +180,30 @@ public class Main {
             contadorFilas++;
             contadorColumnas = 0;
         }
-        for (int[] filaTablero : tablero) {
-            System.out.println(Arrays.toString(filaTablero));
-        }
+        return tablero;
     }
-}
 
+    public static int [][] PatronRandom(int fila, int columna){
+        Random valoresRandom = new Random();
+        int [][] matrizRandom = new int[fila][columna];
+        for (int i = 0;i<matrizRandom.length;i++){
+            for(int j= 0;j<matrizRandom[i].length;j++){
+                matrizRandom[i][j] = valoresRandom.nextInt(2);
+            }
+        }
+        return matrizRandom;
+    }
+
+    public static void mostrarPatron(int [][] patronaImprimir){
+        for(int [] filadelPatron : patronaImprimir){
+            System.out.println(Arrays.toString(filadelPatron));
+        }
+
+    }
+
+
+
+
+
+}
 
