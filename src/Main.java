@@ -10,23 +10,28 @@ public class Main {
         String[] patron = capturarPatron(args);
         int valorVe = capturarVecindario(args);
 
-
-        // Mostrar resultados, manejando errores si es necesario
+        // Mostrar el valor de las variables y controlando los errores.
         System.out.println("w= " + mostrarError(valorWidth));
         System.out.println("h= " + mostrarError(valorH));
-        System.out.println("g= " + mostrarError(valorG) );
-        System.out.println("s= " +  mostrarError(valorV));
-        System.out.println("p= "+ Arrays.toString(patron));
-        System.out.println("n="+ mostrarError(valorVe));
+        System.out.println("g= " + mostrarError(valorG));
+        System.out.println("s= " + mostrarError(valorV));
+        System.out.println("p= " + Arrays.toString(patron));
+        System.out.println("n=" + mostrarError(valorVe));
 
 
+        //Se imprimiran los resultados solo si no hay error
+        int[][] tableroListo = null;
         if (valorWidth != 24847 && valorWidth != 34857 &&
                 valorH != 24847 && valorH != 34857 &&
                 valorG != 24847 && valorG != 34857 &&
                 valorV != 24847 && valorV != 34857) {
-            int [][] tableroListo = generarPatron(patron, valorWidth, valorH);
+
+            tableroListo = generarPatron(patron, valorWidth, valorH);
+
+            System.out.println("Este es el tablero inicial :");
             mostrarPatron(tableroListo);
         }
+
 
     }
 
@@ -42,9 +47,11 @@ public class Main {
         return String.valueOf(valor); // Si no hay error, retorna el valor como String
     }
 
+
     public static String limpiarDatos(String datos) {
         return datos.replace("p=", "").replace("\"", "").replaceAll("\\s+", "");
     }
+
 
     public static int capturarAncho(String[] args) {
         try {
@@ -63,6 +70,7 @@ public class Main {
             return 34857; // Valor especial para "NO PRESENTE"
         }
     }
+
 
     public static int capturarAlto(String[] args) {
         try {
@@ -83,6 +91,7 @@ public class Main {
             return 34857; // O usar otro código de error si es necesario
         }
     }
+
 
     public static int capturarGeneracion(String[] args) {
         try {
@@ -106,6 +115,7 @@ public class Main {
         }
     }
 
+
     public static int capturarVelocidad(String[] args) {
         try {
             String velocidad = args[3];
@@ -123,6 +133,7 @@ public class Main {
         }
     }
 
+
     public static int capturarVecindario(String[] args) {
         try {
             String vecindario = args[5];
@@ -138,7 +149,6 @@ public class Main {
             return 3; // O usar otro código de error si es necesario
         }
     }
-
 
 
     public static String[] capturarPatron(String[] args) {
@@ -183,6 +193,7 @@ public class Main {
         return tablero;
     }
 
+
     public static int [][] PatronRandom(int fila, int columna){
         Random valoresRandom = new Random();
         int [][] matrizRandom = new int[fila][columna];
@@ -194,6 +205,7 @@ public class Main {
         return matrizRandom;
     }
 
+
     public static void mostrarPatron(int [][] patronaImprimir){
         for(int [] filadelPatron : patronaImprimir){
             System.out.println(Arrays.toString(filadelPatron));
@@ -202,8 +214,15 @@ public class Main {
     }
 
 
+    public static int contarVecinosVivos(){
 
+
+
+
+        return 0;
+    }
 
 
 }
+
 
