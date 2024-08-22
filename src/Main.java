@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Random;
 
+
 public class Main {
     public static void main(String[] args) {
         int valorWidth = capturarAncho(args);
@@ -19,18 +20,51 @@ public class Main {
         System.out.println("n=" + mostrarError(valorVe));
 
 
+
+
         //Se imprimiran los resultados solo si no hay error
-        int[][] tableroListo = null;
-        if (valorWidth != 24847 && valorWidth != 34857 &&
+        if (    valorWidth != 24847 && valorWidth != 34857 &&
                 valorH != 24847 && valorH != 34857 &&
                 valorG != 24847 && valorG != 34857 &&
-                valorV != 24847 && valorV != 34857) {
+                valorV != 24847 && valorV != 34857  )
+        {
 
-            tableroListo = generarPatron(patron, valorWidth, valorH);
 
+            int[][] tableroListo = generarPatron(patron, valorWidth, valorH);
             System.out.println("Este es el tablero inicial :");
             mostrarPatron(tableroListo);
+
+            System.out.println(" ");
+            int generacionActual = 1;
+            while (generacionActual <= valorG) {
+                System.out.println("Generación " + generacionActual + ":");
+                System.out.println(" ");
+                int [][] tableroActualizado = aplicarLasReglas(tableroListo,valorWidth,valorH,valorVe);
+                System.out.println("Este es el tablero en la siguiente generacion: ");
+                mostrarPatron(tableroActualizado);
+                System.out.println(" ");
+
+                try {
+                    Thread.sleep(valorV);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
+                tableroListo = aplicarLasReglas(tableroActualizado,valorWidth,valorH,valorVe);
+                if (generacionActual >= 9){
+                    invertirCelulas(tableroListo,valorWidth,valorH);
+                }
+
+
+                generacionActual++;
+            }
+
+
+
+        }else {
+            System.out.println("Hubo error en los parametros");;
         }
+
 
 
     }
@@ -135,6 +169,7 @@ public class Main {
 
 
     public static int capturarVecindario(String[] args) {
+
         try {
             String vecindario = args[5];
             if(!vecindario.startsWith("n=")){
@@ -142,7 +177,9 @@ public class Main {
             }
 
             String valueVe = vecindario.replaceAll("[n=]", "");
-            return Integer.parseInt(valueVe);
+            int vecindarioNumero = Integer.parseInt(valueVe);
+
+            return vecindarioNumero;
         }catch (NumberFormatException error) {
             return 3; // O usar otro código de error si es necesario
         } catch (ArrayIndexOutOfBoundsException error) {
@@ -187,6 +224,7 @@ public class Main {
                 tablero[contadorFilas][contadorColumnas] = valor;
                 contadorColumnas++;
             }
+
             contadorFilas++;
             contadorColumnas = 0;
         }
@@ -214,15 +252,162 @@ public class Main {
     }
 
 
-    public static int contarVecinosVivos(){
 
 
+    public static int  contadorVecinos(int vecindario, int x, int y, int[][] tablerodeJuego, int anchoTablero, int altoTablero) {
+        int contador = 0;
+        int[][] coordenadasDeVecindad;
+
+        switch (vecindario) {
+            case 1:
+                coordenadasDeVecindad = new int[][]{
+                        {-1, 0}, {1, 0}, {0, -1}, {0, 1}
+                };
+                for (int[] coordenada : coordenadasDeVecindad) {
+                    int nuevaCoordenadaX = x + coordenada[0];
+                    int nuevaCoordenadaY = y + coordenada[1];
+
+                    if (nuevaCoordenadaX >= 0 && nuevaCoordenadaX < altoTablero && nuevaCoordenadaY >= 0 && nuevaCoordenadaY < anchoTablero) {
+                        contador += tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY];
+                        //System.out.println("aca voy vecindario 1" + contador + tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY]);
+                    }
+                }
+
+                break;
+            case 2:
+                coordenadasDeVecindad = new int[][]{
+                        {-1, -1}, {-1, 0}, {0, -1},{0,1},{1, 0}, {1, 1}
+                };
+                int contadorCoordenada = 0;
+                for (int[] coordenada : coordenadasDeVecindad) {
+
+                    int nuevaCoordenadaX = x + coordenada[0];
+                    int nuevaCoordenadaY = y + coordenada[1];
+
+                    if (nuevaCoordenadaX >= 0 && nuevaCoordenadaX < altoTablero && nuevaCoordenadaY >= 0 && nuevaCoordenadaY < anchoTablero) {
+                        contador += tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY];
+                        //System.out.println("aca voy vecindario 2:" + "Este es el contador"+ contador+ "Esta es la posicion: "+  tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY]);
+
+                    }
+                    contadorCoordenada++;
+                    //System.out.println(" ");
+                    // System.out.println("Esta es la iteracion: "+ contadorCoordenada);
+                }
+
+                break;
+            case 3:
+                coordenadasDeVecindad = new int[][]{
+                        {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}
+                };
+                for (int[] coordenada : coordenadasDeVecindad) {
+                    int nuevaCoordenadaX = x + coordenada[0];
+                    int nuevaCoordenadaY = y + coordenada[1];
 
 
-        return 0;
+                    if (nuevaCoordenadaX >= 0 && nuevaCoordenadaX < altoTablero && nuevaCoordenadaY >= 0 && nuevaCoordenadaY < anchoTablero) {
+                        contador += tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY];
+
+                        // System.out.println("aca voy vecindario 3" + contador + tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY]);
+                    }
+                }
+                break;
+            case 4:
+                coordenadasDeVecindad = new int[][]{
+                        {1, -1}, {-1, 1}, {1, -1}, {1, 1}
+                };
+
+                for (int[] coordenada : coordenadasDeVecindad) {
+                    int nuevaCoordenadaX = x + coordenada[0];
+                    int nuevaCoordenadaY = y + coordenada[1];
+
+                    if (nuevaCoordenadaX >= 0 && nuevaCoordenadaX < altoTablero && nuevaCoordenadaY >= 0 && nuevaCoordenadaY < anchoTablero) {
+                        contador += tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY];
+                        //System.out.println("aca voy vecindario 4:  " + contador + tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY]);
+
+                    }
+                }
+                break;
+            case 5:
+                coordenadasDeVecindad = new int[][]{
+                        {-1, -1}, {-1, 0}, {-1, 1}, {1, -1}, {1, 0}, {1, 1}
+                };
+                for (int[] coordenada : coordenadasDeVecindad) {
+                    int nuevaCoordenadaX = x + coordenada[0];
+                    int nuevaCoordenadaY = y + coordenada[1];
+
+                    if (nuevaCoordenadaX >= 0 && nuevaCoordenadaX < altoTablero && nuevaCoordenadaY >= 0 && nuevaCoordenadaY < anchoTablero) {
+                        contador += tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY];
+                        //System.out.println("aca voy vecindario 5" + contador + tablerodeJuego[nuevaCoordenadaX][nuevaCoordenadaY]);
+
+                    }
+                }
+                break;
+            default:
+                System.out.println("Vecindario no reconocido.");
+                break;
+        }
+
+        return contador;
+    }
+
+    public static int[][] aplicarLasReglas(int[][] tableroDeJuego, int anchoTablero, int altoTablero, int vecindario) {
+        int[][] tableroActualizado = new int[altoTablero][anchoTablero];
+
+        for (int i = 0; i < altoTablero; i++) {
+            for ( int j = 0 ; j < anchoTablero; j++) {
+                int vecinosVivos = contadorVecinos(vecindario, i, j, tableroDeJuego, anchoTablero, altoTablero);
+
+                if (tableroDeJuego[i][j] == 1) { // Célula viva
+                    if (vecinosVivos < 2 || vecinosVivos > 3) {
+                        tableroActualizado[i][j] = 0; // Muere
+                    } else {
+                        tableroActualizado[i][j] = 1; // Sobrevive
+                    }
+                } else { // Célula muerta
+                    if (vecinosVivos == 3) {
+                        tableroActualizado[i][j] = 1; // Nace
+                    } else {
+                        tableroActualizado[i][j] = 0; // Permanece muerta
+                    }
+                }
+            }
+
+        }
+
+        // Actualizar el tablero original con el tablero actualizado
+        for (int i = 0; i < altoTablero; i++) {
+            for (int j = 0; j < anchoTablero; j++) {
+                tableroDeJuego[i][j] = tableroActualizado[i][j];
+            }
+        }
+
+        return tableroActualizado;
     }
 
 
+
+    public static int[][] invertirCelulas (int [][] tableroDeJuego, int anchoTablero, int altoTablero){
+        int [][] tableroInvertido = new int[altoTablero][anchoTablero];
+        for (int i = 0; i < altoTablero; i++) {
+            for ( int j = 0 ; j < anchoTablero; j++) {
+                if (tableroDeJuego[i][j] == 1) { // Célula viva
+                    tableroInvertido[i][j] = 0; // Muere
+                } else if (tableroDeJuego[i][j]==0) {
+                    tableroInvertido [i][j] = 1;
+                }
+            }
+
+        }
+
+        for(int [] filaInvertida: tableroInvertido){
+            System.out.println(Arrays.toString(filaInvertida));
+        }
+
+        return tableroInvertido;
+
+    }
+
 }
+
 
 
